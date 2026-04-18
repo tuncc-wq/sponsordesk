@@ -2,8 +2,8 @@
 // SUPABASE CONFIG — replace these two values after you set up
 // your Supabase project (instructions in README.md)
 // ============================================================
-const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const SUPABASE_URL = 'https://hzzwncxttglzzlzppbwt.supabase.com';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh6enduY3h0dGdsenpsenBwYnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0Njg2MzIsImV4cCI6MjA5MjA0NDYzMn0.6Cofr8bg4L-hN8uW8Uji-0-JXJIGryEx-cmbt9HoXJM';
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
