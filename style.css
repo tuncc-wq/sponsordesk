@@ -18,7 +18,7 @@
   --font-mono: 'DM Mono', monospace;
   --radius: 10px;
   --radius-lg: 16px;
-  --sidebar-w: 220px;
+  --sidebar-w: 160px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
