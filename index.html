@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SponsorDesk — Creator CRM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div id="app-shell" style="display:none;">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-mark">SD</span>
+        <span class="logo-text">SponsorDesk</span>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" onclick="switchView('dashboard')">
+          <span class="nav-icon">◈</span> Dashboard
+        </button>
+        <button class="nav-item" onclick="switchView('deals')">
+          <span class="nav-icon">◇</span> All Deals
+        </button>
+        <button class="nav-item" onclick="switchView('pipeline')">
+          <span class="nav-icon">◫</span> Pipeline
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="channel-badge" id="channel-info">
+          <div class="channel-avatar" id="sidebar-avatar">YT</div>
+          <div>
+            <div class="channel-name" id="sidebar-name">My Channel</div>
+            <div class="channel-sub">Creator</div>
+          </div>
+        </div>
+        <button class="signout-btn" onclick="signOut()">Sign out</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div id="view-dashboard" class="view active">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Dashboard</h1>
+            <p class="page-subtitle" id="greeting">Good morning</p>
+          </div>
+          <button class="btn-primary" onclick="openModal()">+ New deal</button>
+        </div>
+        <div class="stats-grid" id="stats-grid"></div>
+        <div class="section-header"><h2 class="section-title">Recent deals</h2></div>
+        <div class="deals-table" id="recent-deals"></div>
+        <div class="upcoming-section">
+          <div class="section-header"><h2 class="section-title">Follow-ups this week</h2></div>
+          <div id="upcoming-list"></div>
+        </div>
+      </div>
+
+      <div id="view-deals" class="view">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">All Deals</h1>
+            <p class="page-subtitle" id="deals-count">0 deals total</p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <select class="filter-select" onchange="filterDeals(this.value)" id="status-filter">
+              <option value="all">All statuses</option>
+              <option value="Outreach">Outreach</option>
+              <option value="Negotiating">Negotiating</option>
+              <option value="Signed">Signed</option>
+              <option value="Delivered">Delivered</option>
+              <option value="Paid">Paid</option>
+              <option value="Declined">Declined</option>
+            </select>
+            <button class="btn-primary" onclick="openModal()">+ New deal</button>
+          </div>
+        </div>
+        <div class="deals-table" id="all-deals-table"></div>
+      </div>
+
+      <div id="view-pipeline" class="view">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Pipeline</h1>
+            <p class="page-subtitle">Drag deals between stages</p>
+          </div>
+          <button class="btn-primary" onclick="openModal()">+ New deal</button>
+        </div>
+        <div class="pipeline-board" id="pipeline-board"></div>
+      </div>
+    </main>
+  </div>
+
+  <div id="auth-screen">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <span class="logo-mark">SD</span>
+        <span class="logo-text">SponsorDesk</span>
+      </div>
+      <h2 class="auth-title">Creator sponsorship tracking, done right.</h2>
+      <div id="auth-form">
+        <input class="auth-input" type="email" id="auth-email" placeholder="your@email.com" />
+        <input class="auth-input" type="password" id="auth-password" placeholder="Password" />
+        <input class="auth-input" id="auth-name" placeholder="Your channel name" style="display:none;" />
+        <button class="auth-btn" id="auth-submit-btn" onclick="handleAuth()">Sign in</button>
+        <p class="auth-toggle">Don't have an account? <span onclick="toggleAuthMode()">Sign up</span></p>
+      </div>
+      <p class="auth-error" id="auth-error"></p>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-heading">New deal</h3>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Brand name *</label>
+            <input type="text" id="f-brand" placeholder="e.g. NordVPN" />
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            <input type="text" id="f-category" placeholder="e.g. VPN, Tech" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Deal amount ($)</label>
+            <input type="number" id="f-amount" placeholder="500" />
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select id="f-status">
+              <option>Outreach</option>
+              <option>Negotiating</option>
+              <option>Signed</option>
+              <option>Delivered</option>
+              <option>Paid</option>
+              <option>Declined</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Contact email</label>
+            <input type="email" id="f-email" placeholder="manager@brand.com" />
+          </div>
+          <div class="form-group">
+            <label>Follow-up date</label>
+            <input type="date" id="f-followup" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Notes</label>
+          <textarea id="f-notes" placeholder="Rate card sent, waiting for reply..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn-primary" onclick="saveDeal()">Save deal</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="detail-overlay" onclick="closeDetailOutside(event)">
+    <div class="modal modal-detail">
+      <div class="modal-header">
+        <h3 class="modal-title" id="d-brand"></h3>
+        <button class="modal-close" onclick="closeDetail()">✕</button>
+      </div>
+      <div class="modal-body" id="d-body"></div>
+      <div class="modal-footer">
+        <button class="btn-ghost" onclick="deleteFromDetail()">Delete</button>
+        <button class="btn-ghost" onclick="closeDetail()">Close</button>
+        <button class="btn-primary" onclick="editFromDetail()">Edit deal</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
+</body>
+</html>
